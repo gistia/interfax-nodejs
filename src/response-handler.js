@@ -33,7 +33,9 @@ class ResponseHandler {
           result = new Image(data, response.headers['content-type']);
         }
 
-        if (response.statusCode >= 300) {
+        if (response.statusCode === 401) {
+          emitter.emit('reject', new Error('Unauthorized request. ' + JSON.stringify(result)));
+        } else if (response.statusCode >= 300) {
           emitter.emit('reject', result);
         } else {
           emitter.emit('resolve', result);

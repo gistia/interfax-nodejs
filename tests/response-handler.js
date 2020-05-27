@@ -105,6 +105,22 @@ describe('ResponseHandler', () => {
       response.emit('end');
     });
 
+    it('should thrown an exception when there is a 401 status code response', (done) => {
+      let emitter = new EventEmitter();
+      emitter.on('reject', (error) => {
+        expect(error).to.be.an.instanceof(Error);
+        done();
+      });
+      let handler = new ResponseHandler(emitter);
+      let response = new EventEmitter();
+      response.headers = { 'content-type' : 'text/json' };
+      response.statusCode = 401;
+
+      handler(response);
+      response.emit('end');
+
+    });
+
     it('should process an empty body', (done) => {
       let emitter = new EventEmitter();
       emitter.on('resolve', (result) => {
